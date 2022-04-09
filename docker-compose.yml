@@ -1,9 +1,34 @@
 services:
+  redis:
+    image: redis
+    hostname: redis
+
   web:
     build: .
-    image: djocker
+    image: djocker:0.9
     hostname: web
     volumes:
       - ./project:/project
+      - ./logs:/project/logs
     ports:
       - 8001:8000
+    environment:
+      - CELERY_BROKER=redis://redis:6379
+      - CELERY_BACKEND=redis://redis:6379
+    depends_on:
+      - redis
+
+  background:
+    build: .
+    image: djocker:0.9
+    hostname: background
+    volumes:
+      - ./project:/project
+      - ./logs:/project/logs
+    command: celery --app=djocker.celery worker --loglevel=info --logfile=logs/celery.log
+    environment:
+      - CELERY_BROKER=redis://redis:6379
+      - CELERY_BACKEND=redis://redis:6379
+    depends_on:
+      - web
+      - redis
