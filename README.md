@@ -42,7 +42,7 @@ CELERY_BROKER_URL = os.getenv("CELERY_BROKER")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_BACKEND")
 ```
 
-Add the celery app to settings-root (djocker.__init__.py)
+Add the celery app to settings-root (djocker.\_\_init\_\_.py)
 ---
 
 In order for celery to work with django the app needs to be
