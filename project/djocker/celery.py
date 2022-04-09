@@ -1,17 +1,9 @@
 import os
 from celery import Celery
-from django.conf import settings
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djocker.settings')
+app = Celery('Djocker task processor')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-def create_application():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djocker.settings')
-    application = Celery('Djocker task processor')
-    application.config_from_object('django.conf:settings', namespace='CELERY')
-
-    # Looks up for task modules in Django applications and loads them
-    application.autodiscover_tasks()
-
-    return application
-
-
-app = create_application()
+# Looks up for task modules in Django applications and loads them
+app.autodiscover_tasks()
