@@ -47,7 +47,7 @@ Add the celery app to settings-root (djocker.\_\_init\_\_.py)
 
 In order for celery to work with django the app needs to be
 
-1. in this position in the project tree.
+1. in this position in the project tree, relative to the settings module that you defined at DJANGO_SETTINGS_MODULE.
 2. defined with this name.
 
 ```python
