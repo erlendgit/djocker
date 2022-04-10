@@ -59,12 +59,12 @@ services:
       - 8002:5432
 
   resultbackend:
-    image: redis:6.2.6
+    image: redis:6.2.6-alpine
     restart: always
     hostname: resultbackend
 
   broker:
-    image: rabbitmq:3.9.14-management
+    image: rabbitmq:3.9.14-management-alpine
     hostname: broker
     restart: always
     environment:

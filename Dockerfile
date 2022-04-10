@@ -1,20 +1,14 @@
 # Explicit is better then implicit... we use python 3.10.4. Period.
-FROM python:3.10.4
+FROM python:3.10.4-alpine
 
-# Update the apt system - build a list of available packages.
-RUN apt update && apt upgrade -y
+# Update the package system - build a list of available packages.
+RUN apk update && apk upgrade
 
-# Install some tools for debugging. I'm used to virtual machines, so at first installing vim
-#   seemed a good idea. I never used it ;-) But I keep it here as a reminder about where I
-#   come from.
-RUN apt install iputils-ping redis-tools vim -y
+# Include bash for a little comfort in shell scriptnig, and some debugging tools
+RUN apk add bash iputils
 
-# It always annois me if basic file listing functionality is not present at virtual machines.
-# Since I probably still spend some time inside the container I prefer to have some eye candy
-#   in place.
-RUN echo "alias ls='ls --color'" >> /etc/bash.bashrc
-RUN echo "alias ll='ls -l'" >> /etc/bash.bashrc
-RUN echo "alias la='ls -la'" >> /etc/bash.bashrc
+# Add a user for security purposes.
+RUN adduser www-data -h /home/www -s /bin/bash -G www-data -D
 
 # Copy relevant (-only) project files.
 COPY ./requirements.txt /
