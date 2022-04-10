@@ -1,19 +1,4 @@
 services:
-  resultbackend:
-    image: redis:6.2.6
-    hostname: resultbackend
-
-  broker:
-    image: rabbitmq:3.9.14-management
-    hostname: broker
-    restart: always
-    environment:
-      HOSTNAME: broker
-      RABBITMQ_DEFAULT_USER: djocker
-      RABBITMQ_DEFAULT_PASS: djocker
-    ports:
-      - 8002:15672
-
   web:
     # web is a copy of the current Dockerfile.
     extends:
@@ -24,6 +9,11 @@ services:
       CELERY_BROKER: "amqp://djocker:djocker@broker:5672"
       CELERY_BACKEND: "redis://resultbackend:6379"
       DJANGO_SECRET_KEY: "2086830a-516b-48a4-9011-03999e8233d9@bb714614-7dcf-47d8-8e61-b2aa85a8e139"
+      PG_DATABASE_HOST: db
+      PG_DATABASE_PORT: 5432
+      PG_DATABASE_USER: postgres
+      PG_DATABASE_PASS: s3cret
+      PG_DATABASE_DB: postgres
     command: "./manage.py runserver 0.0.0.0:8000"
     ports:
       - 8001:8000
@@ -44,6 +34,11 @@ services:
       CELERY_BROKER: "amqp://djocker:djocker@broker:5672"
       CELERY_BACKEND: "redis://resultbackend:6379"
       DJANGO_SECRET_KEY: "django-insecure-4-owxu9ye=jy30y0qc3cv4u#mmkt3acupfy5j*%(zfar)&dd"
+      PG_DATABASE_HOST: db
+      PG_DATABASE_PORT: 5432
+      PG_DATABASE_USER: postgres
+      PG_DATABASE_PASS: s3cret
+      PG_DATABASE_DB: postgres
     # Run celery instead of "manage.py runserver".
     # The confusing part is the --app variable. You also defined the app in the library root
     #   above the djocker.settings. Not yet figured out why.
@@ -51,3 +46,33 @@ services:
     depends_on:
       - resultbackend
       - broker
+
+  db:
+    image: postgres:14.2
+    hostname: db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: s3cret
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+    ports:
+      - 8002:5432
+
+  resultbackend:
+    image: redis:6.2.6
+    restart: always
+    hostname: resultbackend
+
+  broker:
+    image: rabbitmq:3.9.14-management
+    hostname: broker
+    restart: always
+    environment:
+      HOSTNAME: broker
+      RABBITMQ_DEFAULT_USER: djocker
+      RABBITMQ_DEFAULT_PASS: djocker
+    ports:
+      - 8003:15672
+
+volumes:
+  db-storage:
