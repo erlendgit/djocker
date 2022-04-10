@@ -1,0 +1,9 @@
+services:
+  djocker:
+    # This container is built from the local Dockerfile.
+    build: .
+    # Explicit is better then implicit.
+    image: djocker:0.9
+    volumes:
+      - ./project:/project
+      - ./logs:/project/logs

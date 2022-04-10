@@ -1,35 +1,41 @@
 services:
+  # I use redis as broker and result backend.
   redis:
     image: redis
     hostname: redis
 
   web:
-    build: .
-    image: djocker:0.9
+    # web is a copy of the current Dockerfile.
+    extends:
+      file: docker-compose.project.yml
+      service: djocker
     hostname: web
-    volumes:
-      - ./project:/project
-      - ./logs:/project/logs
+    environment:
+      CELERY_BROKER: "redis://redis:6379"
+      CELERY_BACKEND: "redis://redis:6379"
+      DJANGO_SECRET_KEY: "django-insecure-4-owxu9ye=jy30y0qc3cv4u#mmkt3acupfy5j*%(zfar)&dd"
     command: "./manage.py runserver 0.0.0.0:8000"
     ports:
       - 8001:8000
-    environment:
-      - CELERY_BROKER=redis://redis:6379
-      - CELERY_BACKEND=redis://redis:6379
     depends_on:
       - redis
 
   background:
-    build: .
-    image: djocker:0.9
+    # background should have the same capabilities as web in this project. The difference
+    #   is the time and place where the code runs.
+    extends:
+      file: docker-compose.project.yml
+      service: djocker
     hostname: background
-    volumes:
-      - ./project:/project
-      - ./logs:/project/logs
-    command: celery --app=djocker.celery worker --loglevel=info --logfile=logs/celery.log
     environment:
-      - CELERY_BROKER=redis://redis:6379
-      - CELERY_BACKEND=redis://redis:6379
+      # Make sure, at one way or another, that the environment is the same here as at the
+      #   web container where it is about settings.
+      CELERY_BROKER: "redis://redis:6379"
+      CELERY_BACKEND: "redis://redis:6379"
+      DJANGO_SECRET_KEY: "django-insecure-4-owxu9ye=jy30y0qc3cv4u#mmkt3acupfy5j*%(zfar)&dd"
+    # Run celery instead of "manage.py runserver".
+    # The confusing part is the --app variable. You also defined the app in the library root
+    #   above the djocker.settings. Not yet figured out why.
+    command: "celery --app=djocker.celery worker --loglevel=info --logfile=logs/celery.log"
     depends_on:
-      - web
       - redis

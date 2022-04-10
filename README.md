@@ -3,15 +3,14 @@ Example Docker/Django/Celery project
 
 The aim with this project was to create a django/celery project using python only from within a docker container.
 
-Create a dockerfile
+Setup docker
 ---
 
-Documentation follows later in time.
+My considerations about how to set up docker is documented here:
 
-Create docker-compose.yml
----
-
-Documentation follows later in time.
+- Dockerfile
+- docker-compose.project.yml
+- docker-compose.yml
 
 Create a celery app (djocker.celery)
 ---
@@ -45,10 +44,13 @@ CELERY_RESULT_BACKEND = os.getenv("CELERY_BACKEND")
 Add the celery app to settings-root (djocker.\_\_init\_\_.py)
 ---
 
-In order for celery to work with django the app needs to be
+In order for celery to work with django the app needs to be:
 
 1. in this position in the project tree, relative to the settings module that you defined at DJANGO_SETTINGS_MODULE.
 2. defined with this name.
+
+I found this part confusing. The 'celery' command at deployment refers to the file where the app is created, but
+still you need to import the app in this fashion. Not sure why.
 
 ```python
 from .celery import app as celery_app

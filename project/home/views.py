@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.utils.timezone import datetime
 
 from home.models import BackendLog
 
@@ -11,4 +12,5 @@ def index(request):
 
 
 def result(request):
-    return JsonResponse([(r.created_at, r.message) for r in BackendLog.objects.order_by('-created_at').all()], safe=False)
+    return JsonResponse([(datetime.fromtimestamp(r.created_at.timestamp()),
+                          r.message) for r in BackendLog.objects.order_by('-created_at').all()], safe=False)
