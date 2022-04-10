@@ -6,4 +6,4 @@ services:
     image: djocker:0.9
     volumes:
       - ./project:/project
-      - ./logs:/project/logs
+      - ./logs:/var/log/project

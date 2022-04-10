@@ -42,7 +42,7 @@ services:
     # Run celery instead of "manage.py runserver".
     # The confusing part is the --app variable. You also defined the app in the library root
     #   above the djocker.settings. Not yet figured out why.
-    command: "celery --app=djocker.celery worker --loglevel=info --logfile=logs/celery.log"
+    command: "celery --app=djocker.celery worker --loglevel=info --logfile=/var/log/project/celery.log"
     depends_on:
       - resultbackend
       - broker
