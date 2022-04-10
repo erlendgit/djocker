@@ -1,5 +1,4 @@
 services:
-  # I use redis as broker and result backend.
   resultbackend:
     image: redis:6.2.6
     hostname: resultbackend
@@ -24,7 +23,7 @@ services:
     environment:
       CELERY_BROKER: "amqp://djocker:djocker@broker:5672"
       CELERY_BACKEND: "redis://resultbackend:6379"
-      DJANGO_SECRET_KEY: "django-insecure-4-owxu9ye=jy30y0qc3cv4u#mmkt3acupfy5j*%(zfar)&dd"
+      DJANGO_SECRET_KEY: "2086830a-516b-48a4-9011-03999e8233d9@bb714614-7dcf-47d8-8e61-b2aa85a8e139"
     command: "./manage.py runserver 0.0.0.0:8000"
     ports:
       - 8001:8000
