@@ -8,7 +8,7 @@ def index(request):
     from .tasks import run_task
     response = run_task.delay("Hi!")
     return JsonResponse({"msg": "Home is where your heart is.",
-                         "response": response.get(timeout=1, interval=1)}, safe=False)
+                         "response": response.get(timeout=3, interval=.125)}, safe=False)
 
 
 def result(request):
