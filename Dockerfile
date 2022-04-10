@@ -1,4 +1,4 @@
-# Explicit is better then implicit... we use python 3.10.4. Period.
+# Explicit is better then implicit...
 FROM python:3.10.4-alpine
 
 # Update the package system - build a list of available packages.
