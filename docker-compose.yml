@@ -15,7 +15,9 @@ services:
       PG_DATABASE_PASS: s3cret
       PG_DATABASE_DB: postgres
     command: "./manage.py runserver 0.0.0.0:8000"
+    # From the container perspective it is outside:inside
     ports:
+      # Access the web-interface at port 8001 on your host.
       - 8001:8000
     depends_on:
       - resultbackend
@@ -56,6 +58,7 @@ services:
     volumes:
       - db-storage:/var/lib/postgresql/data
     ports:
+      # Access the database via port 8002 on your host.
       - 8002:5432
 
   resultbackend:
@@ -72,6 +75,7 @@ services:
       RABBITMQ_DEFAULT_USER: djocker
       RABBITMQ_DEFAULT_PASS: djocker
     ports:
+      # Access the management interface at port 8003 on your host.
       - 8003:15672
 
 volumes:
