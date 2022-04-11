@@ -2,3 +2,6 @@
 __pycache__/
 project/db.sqlite3
 logs/
+
+# Runtime files.
+project/djocker/local_secret_key.py
